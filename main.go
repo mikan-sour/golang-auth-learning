@@ -34,6 +34,7 @@ func main() {
 
 	persons2 := []person{}
 
+	// needs pointer of object
 	err = json.Unmarshal(bs, &persons2)
 
 	if err != nil {
