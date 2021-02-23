@@ -8,7 +8,6 @@ import (
 
 type person struct {
 	First string
-	Last  string
 }
 
 func main() {
@@ -58,10 +57,18 @@ func foo(w http.ResponseWriter, r *http.Request) {
 	err := json.NewEncoder(w).Encode(p1)
 
 	if err != nil {
-		log.Println("encoding issue", err)
+		log.Println("encoding issue, ", err)
 	}
 }
 
 func bar(w http.ResponseWriter, r *http.Request) {
+	var p1 person
 
+	err := json.NewDecoder(r.Body).Decode(&p1)
+
+	if err != nil {
+		log.Println("decoding issue, ", err)
+	}
+
+	log.Println(p1)
 }
