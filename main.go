@@ -23,13 +23,23 @@ func main() {
 
 	persons := []person{p1, p2}
 
-	js, err := json.Marshal(persons)
+	bs, err := json.Marshal(persons)
 	// turns to json string?////
 
 	if err != nil {
 		log.Panic(err)
 	}
 
-	fmt.Println(string(js))
+	fmt.Println(string(bs))
+
+	persons2 := []person{}
+
+	err = json.Unmarshal(bs, &persons2)
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	fmt.Println("Back into a go data structure", persons2)
 
 }
