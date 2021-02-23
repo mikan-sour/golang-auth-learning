@@ -24,7 +24,7 @@ func main() {
 	persons := []person{p1, p2}
 
 	js, err := json.Marshal(persons)
-	// turns to json string?
+	// turns to json string?////
 
 	if err != nil {
 		log.Panic(err)
