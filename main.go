@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"log"
+	"net/http"
 )
 
 type person struct {
@@ -12,35 +10,46 @@ type person struct {
 }
 
 func main() {
-	p1 := person{
-		First: "Jed",
-		Last:  "Zeins",
-	}
-	p2 := person{
-		First: "Claude",
-		Last:  "Zeins",
-	}
+	// p1 := person{
+	// 	First: "Jed",
+	// 	Last:  "Zeins",
+	// }
+	// p2 := person{
+	// 	First: "Claude",
+	// 	Last:  "Zeins",
+	// }
 
-	persons := []person{p1, p2}
+	// persons := []person{p1, p2}
 
-	bs, err := json.Marshal(persons)
-	// turns to json string?////
+	// bs, err := json.Marshal(persons)
+	// // turns to json string?////
 
-	if err != nil {
-		log.Panic(err)
-	}
+	// if err != nil {
+	// 	log.Panic(err)
+	// }
 
-	fmt.Println(string(bs))
+	// fmt.Println(string(bs))
 
-	persons2 := []person{}
+	// persons2 := []person{}
 
-	// needs pointer of object
-	err = json.Unmarshal(bs, &persons2)
+	// // needs pointer of object
+	// err = json.Unmarshal(bs, &persons2)
 
-	if err != nil {
-		log.Panic(err)
-	}
+	// if err != nil {
+	// 	log.Panic(err)
+	// }
 
-	fmt.Println("Back into a go data structure", persons2)
+	// fmt.Println("Back into a go data structure", persons2)
+
+	http.HandleFunc("/encode", foo)
+	http.HandleFunc("/decode", bar)
+	http.ListenAndServe(":8081", nil)
+
+}
+func foo(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func bar(w http.ResponseWriter, r *http.Request) {
 
 }
