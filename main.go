@@ -8,6 +8,7 @@ import (
 
 type person struct {
 	First string
+	Last  string
 }
 
 func main() {
@@ -42,6 +43,8 @@ func main() {
 
 	// fmt.Println("Back into a go data structure", persons2)
 
+	// http.HandleFunc("/quiz1E", encodeHandler)
+	// http.HandleFunc("/quiz1D", decodeHandler)
 	http.HandleFunc("/encode", foo)
 	http.HandleFunc("/decode", bar)
 	http.ListenAndServe(":8081", nil)
