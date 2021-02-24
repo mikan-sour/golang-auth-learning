@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/hmac"
+	"crypto/sha512"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -9,6 +11,8 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 )
+
+var key = []byte{}
 
 type person struct {
 	First string
@@ -38,37 +42,36 @@ func checkPW(password string, hashed []byte) error {
 	return nil
 }
 
+func signWithHMAC(msg []byte) ([]byte, error) {
+	// add to key
+	for i := 1; i < 64; i++ {
+		key = append(key, byte(i))
+	}
+
+	hmacHash := hmac.New(sha512.New, key)
+
+	_, err := hmacHash.Write(msg)
+
+	if err != nil {
+		return nil, fmt.Errorf("Error in signWithHMAC hashing: %w", err)
+	}
+
+	return hmacHash.Sum(nil), nil
+}
+
+func checkSignature(msg, sig []byte) (bool, error) {
+	newSig, err := signWithHMAC(msg)
+
+	if err != nil {
+		return false, fmt.Errorf("Error in checkSignature : %w", err)
+	}
+
+	same := hmac.Equal(newSig, sig)
+
+	return same, nil
+}
+
 func main() {
-	// p1 := person{
-	// 	First: "Jed",
-	// 	Last:  "Zeins",
-	// }
-	// p2 := person{
-	// 	First: "Claude",
-	// 	Last:  "Zeins",
-	// }
-
-	// persons := []person{p1, p2}
-
-	// bs, err := json.Marshal(persons)
-	// // turns to json string?////
-
-	// if err != nil {
-	// 	log.Panic(err)
-	// }
-
-	// fmt.Println(string(bs))
-
-	// persons2 := []person{}
-
-	// // needs pointer of object
-	// err = json.Unmarshal(bs, &persons2)
-
-	// if err != nil {
-	// 	log.Panic(err)
-	// }
-
-	// fmt.Println("Back into a go data structure", persons2)
 
 	// basicAuth()
 
@@ -122,3 +125,35 @@ func bar(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(p1)
 }
+
+// json marshall/unmarshall simple example
+// p1 := person{
+// 	First: "Jed",
+// 	Last:  "Zeins",
+// }
+// p2 := person{
+// 	First: "Claude",
+// 	Last:  "Zeins",
+// }
+
+// persons := []person{p1, p2}
+
+// bs, err := json.Marshal(persons)
+// // turns to json string?////
+
+// if err != nil {
+// 	log.Panic(err)
+// }
+
+// fmt.Println(string(bs))
+
+// persons2 := []person{}
+
+// // needs pointer of object
+// err = json.Unmarshal(bs, &persons2)
+
+// if err != nil {
+// 	log.Panic(err)
+// }
+
+// fmt.Println("Back into a go data structure", persons2)
